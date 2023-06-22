@@ -1,9 +1,10 @@
-//// TMP Rulesets
+import { evaluate, evaluateSame } from './utils'
+
+// TMP Rulesets
 const standard = "standard"
 const low = "low"
 const same = "same"
 const plus = "plus"
-
 
 // Process integer evaluations between opposing cards that are touching
 // to determine outcome
@@ -28,6 +29,8 @@ const processStandardBattles = (index, card, battleState) => {
     // These take precedence over single evals
     //
 
+    // TODO: Add conditional and integrate with rules passed to single evals
+    // Currently, "same" is automatically used
     if (CARD_UP && CARD_RIGHT) {
         evaluateSame(up, right, color, [up.values[2], right.values[3]], [values[0], values[1]])
     }
@@ -67,49 +70,6 @@ const processStandardBattles = (index, card, battleState) => {
     }
     if (CARD_LEFT) {
         evaluate(left, color, standard, left.values[1], values[3])
-    }
-}
-
-const evaluate = (dir, color, ruleset, v1, v2) => {
-    const isLt = v1 < v2
-    const isGt = v1 > v2
-
-    if (isOpponent(dir, color)) {
-        if (ruleset === standard) {
-            captureIfTrue(isLt, dir, color)
-        } else if (ruleset === low) {
-            captureIfTrue(isGt, dir, color)
-        }
-    }
-}
-
-const isOpponent = (dir, color) => {
-    return dir.color !== color
-}
-
-const capture = (dir, color) => {
-    dir.color = color
-    dir.captured = !dir.captured
-}
-
-const captureIfTrue = (res, dir, color) => {
-    if (res) {
-        capture(dir, color)
-    }
-}
-
-const captureIfOpponent = (dir, color) => {
-    if (isOpponent(dir, color)) {
-        capture(dir, color)
-    }
-}
-
-const evaluateSame = (dir1, dir2, color, arr1, arr2) => {
-    const isSame = arr1.toString() == arr2.toString() // TMP until normalized values
-
-    if (isSame) {
-        captureIfOpponent(dir1, color)
-        captureIfOpponent(dir2, color)
     }
 }
 
