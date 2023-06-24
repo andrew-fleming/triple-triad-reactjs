@@ -12,15 +12,15 @@ export const evaluate = (dir, color, ruleset, v1, v2) => {
     }
 }
 
-export const evaluateSameAndPlus = (dir1, dir2, color, mode, p1, p2) => {
+export const evaluateSameAndPlus = (dir1, dir2, color, ruleset, p1, p2) => {
     const isSame = p1.toString() == p2.toString()
     const isPlus = [p1[0] + p2[0]].toString() == [p1[1] + p2[1]].toString()
 
-    if (mode.plus) {
+    if (ruleset.plus) {
         captureOpponentCardsIfTrue(isPlus, [dir1, dir2], color)
     }
 
-    if (mode.same) {
+    if (ruleset.same) {
         captureOpponentCardsIfTrue(isSame, [dir1, dir2], color)
     }
 }
