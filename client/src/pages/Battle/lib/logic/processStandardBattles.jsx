@@ -1,10 +1,12 @@
-import { evaluate, evaluateSame } from './utils'
+import { evaluate, evaluateSameAndPlus } from './utils'
 
-// TMP Rulesets
-const standard = "standard"
-const low = "low"
-const same = "same"
-const plus = "plus"
+// TMP config rules here
+let RULES = {
+    standard: true,
+    low: false,
+    same: true,
+    plus: true
+}
 
 // Process integer evaluations between opposing cards that are touching
 // to determine outcome
@@ -25,34 +27,34 @@ const processStandardBattles = (index, card, battleState) => {
     const CARD_LEFT = !leftColumn.includes(index) && left?._id
 
     //
-    // "Same" evaluations ("plus" forthcoming)
+    // "Same" and "Plus" evaluations
     // These take precedence over single evals
     //
 
-    // TODO: Add conditional and integrate with rules passed to single evals
-    // Currently, "same" is automatically used
-    if (CARD_UP && CARD_RIGHT) {
-        evaluateSame(up, right, color, [up.values[2], right.values[3]], [values[0], values[1]])
-    }
+    if (RULES.same || RULES.plus) {
+        if (CARD_UP && CARD_RIGHT) {
+            evaluateSameAndPlus(up, right, color, RULES, [up.values[2], right.values[3]], [values[0], values[1]])
+        }
 
-    if (CARD_UP && CARD_DOWN) {
-        evaluateSame(up, down, color, [up.values[2], down.values[0]], [values[0], values[2]])
-    }
+        if (CARD_UP && CARD_DOWN) {
+            evaluateSameAndPlus(up, down, color, RULES, [up.values[2], down.values[0]], [values[0], values[2]])
+        }
 
-    if (CARD_UP && CARD_LEFT) {
-        evaluateSame(up, left, color, [up.values[2], left.values[1]], [values[0], values[3]])
-    }
+        if (CARD_UP && CARD_LEFT) {
+            evaluateSameAndPlus(up, left, color, RULES, [up.values[2], left.values[1]], [values[0], values[3]])
+        }
 
-    if (CARD_RIGHT && CARD_DOWN) {
-        evaluateSame(right, down, color, [right.values[3], down.values[0]], [values[1], values[2]])
-    }
+        if (CARD_RIGHT && CARD_DOWN) {
+            evaluateSameAndPlus(right, down, color, RULES, [right.values[3], down.values[0]], [values[1], values[2]])
+        }
 
-    if (CARD_RIGHT && CARD_LEFT) {
-        evaluateSame(right, left, color, [right.values[3], left.values[1]], [values[1], values[3]])
-    }
+        if (CARD_RIGHT && CARD_LEFT) {
+            evaluateSameAndPlus(right, left, color, RULES, [right.values[3], left.values[1]], [values[1], values[3]])
+        }
 
-    if (CARD_DOWN && CARD_LEFT) {
-        evaluateSame(down, left, color, [down.values[0], left.values[1]], [values[2], values[3]])
+        if (CARD_DOWN && CARD_LEFT) {
+            evaluateSameAndPlus(down, left, color, RULES, [down.values[0], left.values[1]], [values[2], values[3]])
+        }
     }
 
     //
@@ -60,16 +62,16 @@ const processStandardBattles = (index, card, battleState) => {
     //
 
     if (CARD_UP) {
-        evaluate(up, color, standard, up.values[2], values[0])
+        evaluate(up, color, RULES, up.values[2], values[0])
     }
     if (CARD_RIGHT) {
-        evaluate(right, color, standard, right.values[3], values[1])
+        evaluate(right, color, RULES, right.values[3], values[1])
     }
     if (CARD_DOWN) {
-        evaluate(down, color, standard, down.values[0], values[2])
+        evaluate(down, color, RULES, down.values[0], values[2])
     }
     if (CARD_LEFT) {
-        evaluate(left, color, standard, left.values[1], values[3])
+        evaluate(left, color, RULES, left.values[1], values[3])
     }
 }
 
