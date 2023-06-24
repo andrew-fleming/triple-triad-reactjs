@@ -1,23 +1,33 @@
-// Utils
-
-// TMP Rulesets
-const standard = "standard"
-const low = "low"
-const same = "same"
-const plus = "plus"
-
+// Utils (change name)
 export const evaluate = (dir, color, ruleset, v1, v2) => {
     const isLt = v1 < v2
     const isGt = v1 > v2
 
     if (isOpponent(dir, color)) {
-        if (ruleset === standard) {
+        if (ruleset.standard) {
             captureIfTrue(isLt, dir, color)
-        } else if (ruleset === low) {
+        } else if (ruleset.low) {
             captureIfTrue(isGt, dir, color)
         }
     }
 }
+
+export const evaluateSameAndPlus = (dir1, dir2, color, mode, p1, p2) => {
+    const isSame = p1.toString() == p2.toString()
+    const isPlus = [p1[0] + p2[0]].toString() == [p1[1] + p2[1]].toString()
+
+    if (mode.plus) {
+        captureOpponentCardsIfTrue(isPlus, [dir1, dir2], color)
+    }
+
+    if (mode.same) {
+        captureOpponentCardsIfTrue(isSame, [dir1, dir2], color)
+    }
+}
+
+//
+// Helper functions
+//
 
 const isOpponent = (dir, color) => {
     return dir.color !== color
@@ -40,12 +50,12 @@ const captureIfOpponent = (dir, color) => {
     }
 }
 
-export const evaluateSame = (dir1, dir2, color, arr1, arr2) => {
-    const isSame = arr1.toString() == arr2.toString() // TMP until normalized values
-
-    if (isSame) {
-        captureIfOpponent(dir1, color)
-        captureIfOpponent(dir2, color)
+// If isTrue condition, passed opponent directions will be captured
+const captureOpponentCardsIfTrue = (isTrue, directions, color) => {
+    if (isTrue) {
+        for (let i = 0; i < directions.length; i++) {
+            captureIfOpponent(directions[i], color)
+        }
     }
 }
 
